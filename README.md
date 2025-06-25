@@ -18,7 +18,7 @@ Ce guide explique **pas-à-pas**, depuis un VPS Debian 11/12 flambant neuf, comm
 # Mise à jour et outils de base
 ```
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y ca-certificates curl gnupg lsb-release apt-transport-https
+sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 2. Installer Docker Engine + Compose v2
 
