@@ -1,0 +1,11 @@
+{
+    email {$EMAIL}
+}
+
+{$DOMAIN_WEBUI} {
+    reverse_proxy webui:8080
+}
+
+{$DOMAIN_OLLAMA} {
+    reverse_proxy ollama:11434
+}

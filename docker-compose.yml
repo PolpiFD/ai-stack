@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=https://${DOMAIN_WEBUI},https://${DOMAIN_OLLAMA},https://${DOMAIN_N8N}
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    networks: [ai]
+
+  webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: webui
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - webui-data:/app/backend/data
+    depends_on: [ollama]
+    restart: unless-stopped
+    networks: [ai]
+
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - EMAIL=${EMAIL}
+      - DOMAIN_WEBUI=${DOMAIN_WEBUI}
+      - DOMAIN_OLLAMA=${DOMAIN_OLLAMA}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [ai]
+
+networks:
+  ai:
+
+volumes:
+  ollama-data:
+  webui-data:
+  caddy-data:
+  caddy-config:
